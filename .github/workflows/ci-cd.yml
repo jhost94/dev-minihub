@@ -37,7 +37,7 @@ jobs:
         env:
           SSH_USER: ${{ secrets.DIGITAL_OCEAN_USER }}
           SSH_HOST: ${{ secrets.DIGITAL_OCEAN_HOST }}
-          PACKAGE_URL: ${{ github.workplace }}/target/*.jar
+          PACKAGE_URL: ${{ github.GITHUB_WORKFLOW }}/target/*.jar
           DEPLOY_URL: ${{ secrets.CLOUD_DEPLOY_URL }}/target/*.jar
 
       - name: Run remote script
