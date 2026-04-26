@@ -20,7 +20,7 @@
 	<repositories>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/jhost94/jhub-data</url>
+			<url>https://maven.pkg.github.com/jhost94/dev-minihub</url>
 		</repository>
 		<repository>
 			<id>central</id>
