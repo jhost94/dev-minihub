@@ -12,9 +12,9 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class TestServiceTest {
+class TestServiceDev {
 
-    TestService testService;
+    DevService devService;
 
     @Mock
     MessageService messageService;
@@ -29,7 +29,7 @@ class TestServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        testService = new TestService(messageService);
+        devService = new DevService(messageService);
     }
 
     @Test

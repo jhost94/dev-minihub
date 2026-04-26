@@ -1,6 +1,6 @@
 package com.jhost.dev.controller;
 
-import com.jhost.dev.service.TestService;
+import com.jhost.dev.service.DevService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,12 +15,12 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class TestControllerTest {
+class TestControllerDev {
 
-    TestController testController;
+    DevController devController;
 
     @Mock
-    TestService testService;
+    DevService devService;
 
     @Mock
     Locale locale;
@@ -29,12 +29,12 @@ class TestControllerTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        testController = new TestController(testService);
+        devController = new DevController(devService);
     }
 
     @Test
     public void testMockMVC() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(testController).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(devController).build();
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
@@ -44,8 +44,8 @@ class TestControllerTest {
     public void test1() {
         String ptMSG = "PT test message";
 
-        when(testService.getTestMessage(locale)).thenReturn(ptMSG);
+        when(devService.getTestMessage(locale)).thenReturn(ptMSG);
 
-        assertEquals(testController.test(locale), ptMSG);
+        assertEquals(devController.test(locale), ptMSG);
     }
 }

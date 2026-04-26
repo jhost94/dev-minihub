@@ -3,7 +3,7 @@ package com.jhost.dev.config;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 /**
  * <p>
@@ -11,10 +11,13 @@ import org.springframework.boot.context.properties.ConstructorBinding;
  *     It will have no functionality and shall not be used outside of the package, for that use the wrapper {@link ConfigBean}
  * </p>
  */
-@ConstructorBinding
 @ConfigurationProperties("application.core")
 @Getter
-@AllArgsConstructor
 class CoreConfigurationProperties {
     private final String env;
+
+    @ConstructorBinding
+    public CoreConfigurationProperties(String env) {
+        this.env = env;
+    }
 }
