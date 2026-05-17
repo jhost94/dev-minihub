@@ -1,9 +1,9 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    driver-class-name: org.postgresql.Driver
-    username: jhub
-    password: pass
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    driver-class-name: org.postgresql.Driver
+#    username: jhub
+#    password: pass
 application:
   core:
     env: "local_dev"

@@ -2,6 +2,10 @@
 This is a Java Backend template, designed to be generic, yet versatile.
 Over the time I will improve and add/adapt to new technologies I come across and find important to add or change here.
 
+banner art:
+https://patorjk.com/
+Font: Doh
+
 # Instructions
 1. Clone/download/fork the repo or use this template.
 2. Change most/all "template" names in this project to your project name/title.
