@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DevMinihub" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.jhost.dev.DevMinihub" />
+    <option name="MAIN_CLASS_NAME" value="center.jhub.dev.DevMinihub" />
     <module name="dev" />
     <option name="PROGRAM_PARAMETERS" value="spring.profiles.active=local_dev" />
     <extension name="coverage">

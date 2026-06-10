@@ -43,4 +43,4 @@ jobs:
       - name: Run remote script
         run: |
           ssh ${{ secrets.DIGITAL_OCEAN_USER }}@${{ secrets.DIGITAL_OCEAN_HOST }} \
-          "/home/jhub/test.sh"
+          "/home/jhub/run_dev_minihub.sh"
