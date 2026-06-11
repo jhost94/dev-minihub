@@ -2,6 +2,21 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy environment (unused)"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+      run_tests:
+        description: "Run tests before deploy (unused)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
