@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/dev")
+@RequestMapping
 public class DevController {
 
     private final DevService devService;
@@ -30,7 +30,7 @@ public class DevController {
     }
 
 
-    @PostMapping({ "", "/" })
+    @PostMapping({ "/object" })
     @Operation(
         summary = "Returns an object generated from the template given",
         description = "Generates an object based on the template given. It accepts literal objects or"
