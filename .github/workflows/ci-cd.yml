@@ -57,7 +57,5 @@ jobs:
 
       - name: Run remote script
         run: |
-          ssh ${{ secrets.DIGITAL_OCEAN_USER }}@${{ secrets.DIGITAL_OCEAN_HOST }} << EOF
-          /home/jhub/run_dev_minihub.sh &
-          exit;
-          EOF
+          ssh ${{ secrets.DIGITAL_OCEAN_USER }}@${{ secrets.DIGITAL_OCEAN_HOST }} \
+          "/home/jhub/run_dev_minihub.sh; exit;"
