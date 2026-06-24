@@ -58,4 +58,4 @@ jobs:
       - name: Run remote script
         run: |
           ssh ${{ secrets.DIGITAL_OCEAN_USER }}@${{ secrets.DIGITAL_OCEAN_HOST }} \
-          screen -d -m /home/jhub/run_dev_minihub.sh
+          /home/jhub/run_dev_minihub.sh
