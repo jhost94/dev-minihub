@@ -35,6 +35,7 @@ springdoc:
 application:
   core:
     env: "build"
+    version: "@project.version@"
   documentation:
     server:
       url:

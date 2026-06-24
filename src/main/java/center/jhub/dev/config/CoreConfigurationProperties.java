@@ -14,9 +14,11 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 @Getter
 class CoreConfigurationProperties {
     private final String env;
+    private final String version;
 
     @ConstructorBinding
-    public CoreConfigurationProperties(String env) {
+    public CoreConfigurationProperties(String env, String version) {
         this.env = env;
+        this.version = version;
     }
 }

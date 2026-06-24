@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigBean {
 
     private final ApplicationEnvironment env;
+    private final String version;
 
     public ConfigBean(CoreConfigurationProperties coreConfigurationProperties){
         this.env = ApplicationEnvironment.fromString(coreConfigurationProperties.getEnv());
+        this.version = coreConfigurationProperties.getVersion();
     }
 }

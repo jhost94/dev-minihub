@@ -24,5 +24,6 @@ public class Bootstrap implements CommandLineRunner {
                         "Building project." :
                         "Running environment: " + configBean.getEnv().toString()
         );
+        System.out.println("Version: " + configBean.getVersion());
     }
 }
