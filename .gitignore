@@ -33,5 +33,5 @@ build/
 .vscode/
 
 log.log
-dev
-dev.pub
+/dev
+/dev.pub
