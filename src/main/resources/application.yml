@@ -35,3 +35,6 @@ springdoc:
 application:
   core:
     env: "build"
+  documentation:
+    server:
+      url:

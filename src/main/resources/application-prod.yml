@@ -7,3 +7,6 @@
 application:
   core:
     env: "prod"
+  documentation:
+    server:
+      url:

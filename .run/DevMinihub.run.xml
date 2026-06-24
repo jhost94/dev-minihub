@@ -2,7 +2,7 @@
   <configuration default="false" name="DevMinihub" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="center.jhub.dev.DevMinihub" />
     <module name="dev" />
-    <option name="PROGRAM_PARAMETERS" value="spring.profiles.active=local_dev" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=local_dev" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.jhost.dev.*" />

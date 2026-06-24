@@ -7,3 +7,6 @@
 application:
   core:
     env: "local_dev"
+  documentation:
+    server:
+      url: http://test:8080
