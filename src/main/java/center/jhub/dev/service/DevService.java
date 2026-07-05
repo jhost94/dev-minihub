@@ -102,9 +102,7 @@ public class DevService {
     }
 
     private boolean isGenericObject(RestOptionsInDTO r) {
-        return Objects.isNull(r.getType()) &&
-                   Objects.isNull(r.getMin()) &&
-                   Objects.isNull(r.getMax());
+        return Objects.isNull(r.getType());
     }
 
     private Object getExampleForObject(Object o, String fieldName) {
@@ -138,15 +136,10 @@ public class DevService {
     }
 
     private Object getExampleList(RestOptionsInDTO options, String fieldName) {
-        if (!optionsHasMinMax(options)) {
-            if (options.getValue() instanceof List<?> l) {
-                return getExampleList(l, fieldName);
-            }
-            throw new RuntimeException("Invalid value for \"" + JSON_VALUE_PROPERTY + "\" must be a list of items or \"" +
-                                          JSON_MIN_PROPERTY + "\" and \"" + JSON_MAX_PROPERTY + "\" properties must be defined for field \"" + fieldName + "\"");
-        }
-        int size = getExampleInt(Math.max(DEFAULT_MIN_NO_NEG, options.getMin()), options.getMax());
+        setDefaults(options, DEFAULT_MIN_NO_NEG, DEFAULT_MAX_LENGTH);
+        if (options.getValue() instanceof List<?> l) return getExampleList(l, fieldName);
 
+        int size = getExampleInt(Math.max(DEFAULT_MIN_NO_NEG, options.getMin()), options.getMax());
         List<Object> list = new LinkedList<>();
         for (int i = 0; i < size; i++) {
             list.add(getExampleForType(options.getValue(), fieldName));
@@ -195,11 +188,9 @@ public class DevService {
     }
 
     private int getExampleInt(RestOptionsInDTO options) {
-        if (!optionsHasMinMax(options)) {
-            if (Objects.nonNull(options.getCanBeNegative())) {
-                return getExampleInt(options.getCanBeNegative());
-            }
-            return getExampleInt();
+        setDefaults(options);
+        if (Objects.nonNull(options.getCanBeNegative())) {
+            return getExampleInt(options.getCanBeNegative(), options.getMin(), options.getMax());
         }
         return getExampleInt(options.getMin(), options.getMax());
     }
@@ -208,9 +199,14 @@ public class DevService {
         return getExampleInt(Boolean.FALSE);
     }
 
+    private int getExampleInt(boolean canBeNegative, int min, int max) {
+        if (canBeNegative) return getExampleInt(min, max);
+        return getExampleInt(Math.max(DEFAULT_MIN_NO_NEG, min), max);
+    }
+
     private int getExampleInt(boolean canBeNegative) {
-        if (canBeNegative) return getExampleInt(DEFAULT_MIN_NO_NEG, DEFAULT_MAX);
-        return getExampleInt(DEFAULT_MIN, DEFAULT_MAX);
+        if (canBeNegative) return getExampleInt(DEFAULT_MIN, DEFAULT_MAX);
+        return getExampleInt(DEFAULT_MIN_NO_NEG, DEFAULT_MAX);
     }
 
     private int getExampleInt(int min, int max) {
@@ -241,5 +237,14 @@ public class DevService {
 
     private boolean optionsHasMinMax(RestOptionsInDTO options) {
         return Objects.nonNull(options.getMin()) && Objects.nonNull(options.getMax());
+    }
+
+    private void setDefaults(RestOptionsInDTO options) {
+        setDefaults(options, DEFAULT_MIN, DEFAULT_MAX);
+    }
+
+    private void setDefaults(RestOptionsInDTO options, int defaultMin, int defaultMax) {
+        if (Objects.isNull(options.getMin())) options.setMin(defaultMin);
+        if (Objects.isNull(options.getMax())) options.setMax(defaultMax);
     }
 }

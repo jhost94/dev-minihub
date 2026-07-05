@@ -87,6 +87,7 @@ public class RestApiController {
                                                  + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                                  + "\"" + JSON_MAX_PROPERTY + "\": 250"
                                                  + "}"
+                                                 + "}"
                                                  + "},"
                                                  + "\"products\": {"
                                                  + "\"" + JSON_TYPE_PROPERTY + "\": \"ARRAY\","
@@ -95,7 +96,6 @@ public class RestApiController {
                                                  + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                                  + "\"" + JSON_MIN_PROPERTY + "\": 10,"
                                                  + "\"" + JSON_MAX_PROPERTY + "\": 100"
-                                                 + "}"
                                                  + "}"
                                                  + "}"
                                                  + "}"),
@@ -134,8 +134,9 @@ public class RestApiController {
                   }
     )
     public ResponseEntity<?> genericObjectRest(@RequestBody DevRestInDTO dto,
-                                               @RequestParam(required = false, defaultValue = "0") Integer delay) {
-        return ResponseEntity.ok(devService.objectRest(dto, delay));
+                                               @RequestParam(required = false, defaultValue = "0") Integer delay,
+                                               @RequestParam(required = false, defaultValue = "200") Integer status) {
+        return ResponseEntity.status(status).body(devService.objectRest(dto, delay));
     }
 
     @GetMapping("/object")
@@ -183,6 +184,7 @@ public class RestApiController {
                                         + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                         + "\"" + JSON_MAX_PROPERTY + "\": 250"
                                         + "}"
+                                        + "}"
                                         + "},"
                                         + "\"products\": {"
                                         + "\"" + JSON_TYPE_PROPERTY + "\": \"ARRAY\","
@@ -191,7 +193,6 @@ public class RestApiController {
                                         + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                         + "\"" + JSON_MIN_PROPERTY + "\": 10,"
                                         + "\"" + JSON_MAX_PROPERTY + "\": 100"
-                                        + "}"
                                         + "}"
                                         + "}"
                                         + "}"
@@ -220,10 +221,11 @@ public class RestApiController {
         }
     )
     public ResponseEntity<?> getObjectRest(@RequestParam String template,
-                                           @RequestParam(required = false, defaultValue = "0") Integer delay) {
+                                           @RequestParam(required = false, defaultValue = "0") Integer delay,
+                                           @RequestParam(required = false, defaultValue = "200") Integer status) {
         try {
             DevRestInDTO dto = objectMapper.readValue(template, DevRestInDTO.class);
-            return ResponseEntity.ok(devService.objectRest(dto, delay));
+            return ResponseEntity.status(status).body(devService.objectRest(dto, delay));
         } catch (Throwable e) {
             return ResponseEntity.badRequest().body("Invalid template format: " + e.getMessage());
         }
@@ -281,6 +283,7 @@ public class RestApiController {
                                     + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                     + "\"" + JSON_MAX_PROPERTY + "\": 250"
                                     + "}"
+                                    + "}"
                                     + "},"
                                     + "\"products\": {"
                                     + "\"" + JSON_TYPE_PROPERTY + "\": \"ARRAY\","
@@ -289,7 +292,6 @@ public class RestApiController {
                                     + "\"" + JSON_TYPE_PROPERTY + "\": \"STRING\","
                                     + "\"" + JSON_MIN_PROPERTY + "\": 10,"
                                     + "\"" + JSON_MAX_PROPERTY + "\": 100"
-                                    + "}"
                                     + "}"
                                     + "}"
                                     + "}"),
@@ -330,8 +332,9 @@ public class RestApiController {
     public ResponseEntity<?> genericListRest(@RequestBody DevRestInDTO dto,
                                              @RequestParam(required = false, defaultValue = "1") Integer min,
                                              @RequestParam(required = false, defaultValue = "1") Integer max,
-                                             @RequestParam(required = false, defaultValue = "0") Integer delay) {
-        return ResponseEntity.ok(devService.listRest(dto, min, max, delay));
+                                             @RequestParam(required = false, defaultValue = "0") Integer delay,
+                                             @RequestParam(required = false, defaultValue = "200") Integer status) {
+        return ResponseEntity.status(status).body(devService.listRest(dto, min, max, delay));
     }
 
     @GetMapping("/list")
@@ -418,10 +421,11 @@ public class RestApiController {
     public ResponseEntity<?> getListRest(@RequestParam String template,
                                          @RequestParam(required = false, defaultValue = "1") Integer min,
                                          @RequestParam(required = false, defaultValue = "1") Integer max,
-                                         @RequestParam(required = false, defaultValue = "1") Integer delay) {
+                                         @RequestParam(required = false, defaultValue = "1") Integer delay,
+                                         @RequestParam(required = false, defaultValue = "200") Integer status) {
         try {
             DevRestInDTO dto = objectMapper.readValue(template, DevRestInDTO.class);
-            return ResponseEntity.ok(devService.listRest(dto, min, max, delay));
+            return ResponseEntity.status(status).body(devService.listRest(dto, min, max, delay));
         } catch (Throwable e) {
             return ResponseEntity.badRequest().body("Invalid template format: " + e.getMessage());
         }
