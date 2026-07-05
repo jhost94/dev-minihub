@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -429,5 +430,10 @@ public class RestApiController {
         } catch (Throwable e) {
             return ResponseEntity.badRequest().body("Invalid template format: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/template")
+    public ResponseEntity<?> generateTemplate(@RequestBody DevRestInDTO dto) {
+        return ResponseEntity.ok(devService.generateTemplate(dto));
     }
 }

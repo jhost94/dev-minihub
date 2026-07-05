@@ -17,6 +17,7 @@ import center.jhub.dev.config.Constants;
 import center.jhub.dev.service.meta.MessageService;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.SystemUtils;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -83,6 +85,13 @@ public class DevService {
         return out;
     }
 
+    public Map<String, RestOptionsInDTO> generateTemplate(Map<String, Object> dto) {
+        Map<String, RestOptionsInDTO> out = new HashMap<>(dto.size());
+        dto.forEach((k, v) -> out.put(k, generateTemplateForType(v)));
+
+        return out;
+    }
+
     private Object getExampleForType(Object type, String fieldName) {
         if (type instanceof Map m) {
             try {
@@ -101,8 +110,65 @@ public class DevService {
         return getExampleString();
     }
 
+    private RestOptionsInDTO generateTemplateForType(Object type) {
+        if (type instanceof List<?> l) return generateTemplateForList(l);
+        if (type instanceof String) return generateTemplateForString();
+        if (type instanceof Integer) return generateTemplateForInt();
+        if (type instanceof Boolean) return generateTemplateForBoolean();
+        if (type instanceof Map m) return generateTemplateForObject(m);
+        return null;
+    }
+
     private boolean isGenericObject(RestOptionsInDTO r) {
         return Objects.isNull(r.getType());
+    }
+
+    private RestOptionsInDTO generateTemplateForString() {
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.STRING);
+        template.setMin(DEFAULT_MIN_NO_NEG);
+        template.setMax(DEFAULT_MAX_LENGTH);
+        template.setCanBeNegative(Boolean.FALSE);
+        return template;
+    }
+
+    private RestOptionsInDTO generateTemplateForInt() {
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.INTEGER);
+        template.setMin(DEFAULT_MIN);
+        template.setMax(DEFAULT_MAX);
+        template.setCanBeNegative(Boolean.TRUE);
+        return template;
+    }
+
+    private RestOptionsInDTO generateTemplateForBoolean() {
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.BOOLEAN);
+        return template;
+    }
+
+    private RestOptionsInDTO generateTemplateForList(List<?> l) {
+        Object value = null;
+        if (!l.isEmpty()) {
+            value = generateTemplateForType(l.getFirst());
+        }
+
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.LIST);
+        template.setMin(DEFAULT_MIN_NO_NEG);
+        template.setMax(DEFAULT_MAX_LENGTH);
+        template.setCanBeNegative(Boolean.FALSE);
+        template.setValue(value);
+        return template;
+    }
+
+    private RestOptionsInDTO generateTemplateForObject(Map<String, Object> m) {
+        Map<String, RestOptionsInDTO> value = new HashMap<>(m.size());
+        m.forEach((k, v) -> value.put(k, generateTemplateForType(v)));
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.OBJECT);
+        template.setValue(value);
+        return template;
     }
 
     private Object getExampleForObject(Object o, String fieldName) {
