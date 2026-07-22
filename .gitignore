@@ -35,3 +35,5 @@ build/
 log.log
 /dev
 /dev.pub
+/ssh_key
+/ssh_key.pub

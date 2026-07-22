@@ -1,4 +1,4 @@
-FROM openjdk:11.0.14.1-oraclelinux8
+FROM eclipse-temurin:25-jdk-ubi10-minimal
 
 ARG JAR_FILE=target/*.jar
 

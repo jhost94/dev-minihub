@@ -1,0 +1,5 @@
+FROM eclipse-temurin:25-jdk-ubi10-minimal
+
+COPY target/*.jar app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]
