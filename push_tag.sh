@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 ### Variables
+DOCKER_USER="jhost94"
 IMAGE_VERSION="0.1.0"
 IMAGE_NAME="jhub-mini-dev"
-BUILD_JAVA=0
+BUILD_SCRIPT="$(pwd)/build_image.sh"
+DO_BUILD=0
 DRY_RUN=0
 BUILD_OPTIONS=""
 
@@ -20,8 +22,6 @@ Options:
   -q        --quiet      Run docker build in quiet mode and prints out it's output.
   -b        --build      Run maven build before building the image.
   -d        --dry        Dry run. Doesn't execute any docker command, instead prints them.
-  -n        --name       Sets image name
-  -v        --version    Sets image version
   -h        --help       Show this message.
 EOF
     exit $r
@@ -31,7 +31,7 @@ EOF
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -b|--build)
-            BUILD_JAVA=1
+            DO_BUILD=1
             shift;;
         -q|--quiet)
             BUILD_OPTIONS="$BUILD_OPTIONS -q"
@@ -43,32 +43,22 @@ while [[ $# -gt 0 ]]; do
             DRY_RUN=1
             shift
             ;;
-        -n|--name)
-            IMAGE_NAME=$2
-            shift
-            shift
-            ;;
-        -v|--version)
-            IMAGE_VERSION=$2
-            shift
-            shift
-            ;;
         *)
             usage "Unknown command $1"
             ;;
     esac
 done
 
-if [ $BUILD_JAVA -eq 1 ]; then
+if [ $DO_BUILD -eq 1 ]; then
     if [[ $DRY_RUN == 1 ]]; then
-        echo "mvn clean package"
+        $BUILD_SCRIPT -n $DOCKER_USER/$IMAGE_NAME -v $IMAGE_VERSION -d
     else
-        mvn clean package
+        $BUILD_SCRIPT -n $DOCKER_USER/$IMAGE_NAME -v $IMAGE_VERSION
     fi
 fi
 
 if [[ $DRY_RUN == 1 ]]; then
-    echo "docker build $BUILD_OPTIONS -t $IMAGE_NAME:$IMAGE_VERSION ."
+    echo "docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_VERSION"
 else
-    docker build $BUILD_OPTIONS -t $IMAGE_NAME:$IMAGE_VERSION .
+    docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_VERSION
 fi
