@@ -1,22 +1,13 @@
 package center.jhub.dev.service;
 
-import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_MAX_PROPERTY;
-import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_MIN_PROPERTY;
 import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_TYPE_PROPERTY;
 import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_VALUE_PROPERTY;
 
-import center.jhub.data.dto.in.dev.DevRestInDTO;
 import center.jhub.data.dto.in.dev.RestOptionsInDTO;
 import center.jhub.data.dto.in.dev.RestOptionsInDTO.FieldType;
-import center.jhub.data.dto.out.dev.DevRestOutDTO;
 import center.jhub.utils.FileUtils;
 import center.jhub.utils.ObjectMappers;
-import center.jhub.utils.ThreadUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import center.jhub.dev.config.Constants;
-import center.jhub.dev.service.meta.MessageService;
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,16 +16,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.SystemUtils;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
-
 @Service
-public class DevService {
-
-    private final MessageService messageService;
+public class TemplateService {
     private final String DEFAULT_TEXT_FILE = "text.txt";
     private final int DEFAULT_MAX_LENGTH = 255;
     private final int DEFAULT_MIN_NO_NEG = 0;
@@ -46,53 +31,9 @@ public class DevService {
     private Random random;
     private ObjectMapper mapper = ObjectMappers.getInstance();
 
-    public DevService(MessageService messageService) {
-        this.messageService = messageService;
-    }
-
-    public String getTestMessage(Locale locale){
-        return messageService.getMessage(Constants.MessagePaths.TEST_MESSAGE, locale);
-    }
 
 
-    public DevRestOutDTO objectRest(DevRestInDTO dto) {
-        return objectRest(dto, 0);
-    }
-
-
-    public DevRestOutDTO objectRest(DevRestInDTO dto, int delay) {
-        DevRestOutDTO out = new DevRestOutDTO();
-        dto.forEach((k, v) -> out.put(k, getExampleForType(v, k)));
-
-        ThreadUtils.sleep(Duration.ofSeconds(delay));
-
-        return out;
-    }
-
-    public List<DevRestOutDTO> listRest(DevRestInDTO dto, Integer min, Integer max) {
-        return listRest(dto, min, max, 0);
-    }
-
-    public List<DevRestOutDTO> listRest(DevRestInDTO dto, Integer min, Integer max, int delay) {
-        int size = getExampleInt(min, max);
-        List<DevRestOutDTO> out = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            out.add(objectRest(dto));
-        }
-
-        ThreadUtils.sleep(Duration.ofSeconds(delay));
-
-        return out;
-    }
-
-    public Map<String, RestOptionsInDTO> generateTemplate(Map<String, Object> dto) {
-        Map<String, RestOptionsInDTO> out = new HashMap<>(dto.size());
-        dto.forEach((k, v) -> out.put(k, generateTemplateForType(v)));
-
-        return out;
-    }
-
-    private Object getExampleForType(Object type, String fieldName) {
+    public Object getExampleForType(Object type, String fieldName) {
         if (type instanceof Map m) {
             try {
                 RestOptionsInDTO r = mapper.convertValue(m, RestOptionsInDTO.class);
@@ -110,17 +51,17 @@ public class DevService {
         return getExampleString();
     }
 
-    private RestOptionsInDTO generateTemplateForType(Object type) {
+    public int getExampleInt(int min, int max) {
+        return getRandom().nextInt(min, max);
+    }
+
+    public RestOptionsInDTO generateTemplateForType(Object type) {
         if (type instanceof List<?> l) return generateTemplateForList(l);
         if (type instanceof String) return generateTemplateForString();
         if (type instanceof Integer) return generateTemplateForInt();
         if (type instanceof Boolean) return generateTemplateForBoolean();
         if (type instanceof Map m) return generateTemplateForObject(m);
         return null;
-    }
-
-    private boolean isGenericObject(RestOptionsInDTO r) {
-        return Objects.isNull(r.getType());
     }
 
     private RestOptionsInDTO generateTemplateForString() {
@@ -141,10 +82,17 @@ public class DevService {
         return template;
     }
 
-    private RestOptionsInDTO generateTemplateForBoolean() {
-        RestOptionsInDTO template = new RestOptionsInDTO();
-        template.setType(FieldType.BOOLEAN);
-        return template;
+    private Object getExampleList(RestOptionsInDTO options, String fieldName) {
+        setDefaults(options, DEFAULT_MIN_NO_NEG, DEFAULT_MAX_LENGTH);
+        if (options.getValue() instanceof List<?> l) return getExampleList(l, fieldName);
+
+        int size = getExampleInt(Math.max(DEFAULT_MIN_NO_NEG, options.getMin()), options.getMax());
+        List<Object> list = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(getExampleForType(options.getValue(), fieldName));
+        }
+
+        return list;
     }
 
     private RestOptionsInDTO generateTemplateForList(List<?> l) {
@@ -162,6 +110,13 @@ public class DevService {
         return template;
     }
 
+
+    private RestOptionsInDTO generateTemplateForBoolean() {
+        RestOptionsInDTO template = new RestOptionsInDTO();
+        template.setType(FieldType.BOOLEAN);
+        return template;
+    }
+
     private RestOptionsInDTO generateTemplateForObject(Map<String, Object> m) {
         Map<String, RestOptionsInDTO> value = new HashMap<>(m.size());
         m.forEach((k, v) -> value.put(k, generateTemplateForType(v)));
@@ -170,6 +125,11 @@ public class DevService {
         template.setValue(value);
         return template;
     }
+
+    private boolean isGenericObject(RestOptionsInDTO r) {
+        return Objects.isNull(r.getType());
+    }
+
 
     private Object getExampleForObject(Object o, String fieldName) {
         if (o instanceof Map m) return getExampleForObject(m);
@@ -199,19 +159,6 @@ public class DevService {
             case OBJECT -> getExampleForObject(r.getValue(), fieldName);
             default -> getExampleString();
         };
-    }
-
-    private Object getExampleList(RestOptionsInDTO options, String fieldName) {
-        setDefaults(options, DEFAULT_MIN_NO_NEG, DEFAULT_MAX_LENGTH);
-        if (options.getValue() instanceof List<?> l) return getExampleList(l, fieldName);
-
-        int size = getExampleInt(Math.max(DEFAULT_MIN_NO_NEG, options.getMin()), options.getMax());
-        List<Object> list = new LinkedList<>();
-        for (int i = 0; i < size; i++) {
-            list.add(getExampleForType(options.getValue(), fieldName));
-        }
-
-        return list;
     }
 
     private List<Object> getExampleList(List<?> l, String fieldName) {
@@ -273,10 +220,6 @@ public class DevService {
     private int getExampleInt(boolean canBeNegative) {
         if (canBeNegative) return getExampleInt(DEFAULT_MIN, DEFAULT_MAX);
         return getExampleInt(DEFAULT_MIN_NO_NEG, DEFAULT_MAX);
-    }
-
-    private int getExampleInt(int min, int max) {
-        return getRandom().nextInt(min, max);
     }
 
     private Random getRandom() {

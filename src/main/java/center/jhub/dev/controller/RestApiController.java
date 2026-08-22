@@ -7,7 +7,7 @@ import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_TYPE_PROPERTY;
 import static center.jhub.data.dto.in.dev.RestOptionsInDTO.JSON_VALUE_PROPERTY;
 
 import center.jhub.data.dto.in.dev.DevRestInDTO;
-import center.jhub.dev.service.DevService;
+import center.jhub.dev.service.RestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RestApiController {
 
-    private final DevService devService;
+    private final RestService restService;
     private final ObjectMapper objectMapper;
 
 
@@ -137,7 +137,7 @@ public class RestApiController {
     public ResponseEntity<?> genericObjectRest(@RequestBody DevRestInDTO dto,
                                                @RequestParam(required = false, defaultValue = "0") Integer delay,
                                                @RequestParam(required = false, defaultValue = "200") Integer status) {
-        return ResponseEntity.status(status).body(devService.objectRest(dto, delay));
+        return ResponseEntity.status(status).body(restService.objectRest(dto, delay));
     }
 
     @GetMapping("/object")
@@ -226,7 +226,7 @@ public class RestApiController {
                                            @RequestParam(required = false, defaultValue = "200") Integer status) {
         try {
             DevRestInDTO dto = objectMapper.readValue(template, DevRestInDTO.class);
-            return ResponseEntity.status(status).body(devService.objectRest(dto, delay));
+            return ResponseEntity.status(status).body(restService.objectRest(dto, delay));
         } catch (Throwable e) {
             return ResponseEntity.badRequest().body("Invalid template format: " + e.getMessage());
         }
@@ -335,7 +335,7 @@ public class RestApiController {
                                              @RequestParam(required = false, defaultValue = "1") Integer max,
                                              @RequestParam(required = false, defaultValue = "0") Integer delay,
                                              @RequestParam(required = false, defaultValue = "200") Integer status) {
-        return ResponseEntity.status(status).body(devService.listRest(dto, min, max, delay));
+        return ResponseEntity.status(status).body(restService.listRest(dto, min, max, delay));
     }
 
     @GetMapping("/list")
@@ -426,7 +426,7 @@ public class RestApiController {
                                          @RequestParam(required = false, defaultValue = "200") Integer status) {
         try {
             DevRestInDTO dto = objectMapper.readValue(template, DevRestInDTO.class);
-            return ResponseEntity.status(status).body(devService.listRest(dto, min, max, delay));
+            return ResponseEntity.status(status).body(restService.listRest(dto, min, max, delay));
         } catch (Throwable e) {
             return ResponseEntity.badRequest().body("Invalid template format: " + e.getMessage());
         }
@@ -434,6 +434,6 @@ public class RestApiController {
 
     @PostMapping("/template")
     public ResponseEntity<?> generateTemplate(@RequestBody DevRestInDTO dto) {
-        return ResponseEntity.ok(devService.generateTemplate(dto));
+        return ResponseEntity.ok(restService.generateTemplate(dto));
     }
 }

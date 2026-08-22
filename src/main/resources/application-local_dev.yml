@@ -10,3 +10,13 @@ application:
   documentation:
     server:
       url: http://localhost:8080
+  sse:
+    min-duration: "PT1D"
+    min-frequency: "PT0.001S"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true

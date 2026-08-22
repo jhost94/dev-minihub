@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 class TestServiceDev {
 
-    DevService devService;
+    RestService restService;
 
     @Mock
     MessageService messageService;
@@ -29,7 +29,7 @@ class TestServiceDev {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        devService = new DevService(messageService);
+//        restService = new RestService(messageService);
     }
 
     @Test

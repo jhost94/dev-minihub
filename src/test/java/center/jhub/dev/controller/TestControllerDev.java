@@ -1,6 +1,6 @@
 package center.jhub.dev.controller;
 
-import center.jhub.dev.service.DevService;
+import center.jhub.dev.service.RestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class TestControllerDev {
     RestApiController restApiController;
 
     @Mock
-    DevService devService;
+    RestService restService;
 
     @Mock
     ObjectMapper objectMapper;
@@ -32,7 +32,7 @@ class TestControllerDev {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        restApiController = new RestApiController(devService, objectMapper);
+        restApiController = new RestApiController(restService, objectMapper);
     }
 
     @Test

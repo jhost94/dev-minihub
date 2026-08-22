@@ -2,7 +2,7 @@ package center.jhub.dev.controller.error;
 
 
 import center.jhub.dev.bean.ErrorResponse;
-import center.jhub.dev.exception.meta.UsernameNotFoundException;
+import center.jhub.dev.exception.InvalidTemplateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,8 +21,8 @@ public class ErrorController {
     }
 
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(InvalidTemplateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTemplateException(InvalidTemplateException ex, WebRequest request) {
         return getResponse(ex, request);
     }
 }

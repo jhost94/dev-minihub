@@ -10,3 +10,6 @@ application:
   documentation:
     server:
       url:
+  sse:
+    min-duration: "PT1M"
+    min-frequency: "PT0.2S"

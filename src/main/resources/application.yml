@@ -28,14 +28,19 @@ logging:
       springframework: info
 
 springdoc:
-  swagger:
-    ui:
-      path: /swagger-ui.html
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: false
 
 application:
   core:
     env: "build"
     version: "@project.version@"
+  sse:
+    min-duration: "PT5M"
+    min-frequency: "PT0.1S"
   documentation:
     server:
       url:
