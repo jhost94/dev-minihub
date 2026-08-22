@@ -2,6 +2,9 @@
 This is a Java Backend template, designed to be generic, yet versatile.
 Over the time I will improve and add/adapt to new technologies I come across and find important to add or change here.
 
+Online version can be found at: https://app.jhub.center/swagger-ui/index.html
+(Temporary link, will be changed to a more permanent one in the future)
+
 banner art:
 https://patorjk.com/
 Font: Doh
