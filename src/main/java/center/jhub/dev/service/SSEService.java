@@ -44,8 +44,10 @@ public class SSEService {
         ScheduledFuture<?> task = scheduler.scheduleAtFixedRate(() -> {
             try {
                 String message = objectMapper.writeValueAsString(createObject(dto));
+                String id = String.valueOf(System.currentTimeMillis());
                 emitter.send(SseEmitter.event()
                                  .name("message")
+                                 .id(id)
                                  .data(message));
                 log.info("Sending message: {}", message);
             } catch (AsyncRequestNotUsableException e) {
